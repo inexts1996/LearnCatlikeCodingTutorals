@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class Grid : MonoBehaviour
 {
@@ -9,26 +10,19 @@ public class Grid : MonoBehaviour
     private Vector3[] vertices;
     private void Awake()
     {
-        Generate();
+        StartCoroutine(Generate());
     }
-
-#if UNITY_EDITOR
-    private void OnValidate()
+    private IEnumerator Generate()
     {
-        Generate();
-    }
-#endif
-
-    private void Generate()
-    {
+        WaitForSeconds wait = new WaitForSeconds(0.05f);
         vertices = new Vector3[(xSize + 1) * (ySize + 1)];
-
         // 计算网格顶点坐标（基于对象本地坐标系）
         for (int y = 0, i = 0; y <= ySize; y++)
         {
             for (int x = 0; x <= xSize; x++, i++)
             {
                 vertices[i] = new Vector3(x, y, 0);
+                yield return wait;
             }
         }
     }
@@ -42,7 +36,6 @@ public class Grid : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-
     }
 
     private void OnDrawGizmos()
